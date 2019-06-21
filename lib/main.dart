@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quicknote/widget/home/HomePageWidget.dart';
+import 'package:quicknote/widget/login/LoginPageWidget.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,11 +10,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'QuickNote',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
       home: Scaffold(
         
-        body: HomePageWidget(),
+        body: LoginPageWidget(),
       ),
     );
   }

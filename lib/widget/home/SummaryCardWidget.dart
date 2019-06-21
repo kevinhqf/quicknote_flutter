@@ -45,7 +45,7 @@ class _SummaryCardWidgetState extends State<SummaryCardWidget> {
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    getMoneyFormat(totalBalance),
+                    Utils.getMoneyFormat(totalBalance),
                     style: TextStyle(
                       fontFamily: 'Exo2',
                       fontSize: 36,
@@ -62,7 +62,7 @@ class _SummaryCardWidgetState extends State<SummaryCardWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "￥" + getMoneyFormat(todayBalance),
+                    "￥" + Utils.getMoneyFormat(todayBalance),
                     style: TextStyle(
                       color: Color(0xffff7171),
                       fontFamily: 'Exo2',
