@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quicknote/widget/home/HomePageWidget.dart';
 import 'package:quicknote/widget/login/LoginPageWidget.dart';
+import 'package:quicknote/widget/profile/ProfilePageWidget.dart';
 import 'package:quicknote/widget/transaction/new/NewTransactionPageWidget.dart';
 
 void main() => runApp(MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         
-        body: NewTransactionPageWidget(),
+        body: ProfilePageWidget(),
       ),
     );
   }
