@@ -25,7 +25,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
             children: <Widget>[
               //顶部 label
               Container(
-                margin: EdgeInsets.only(top: 220,left: 78,right: 78),
+                margin: EdgeInsets.only(top: 100,left: 78,right: 78),
                 child: Flex(
                   direction: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
