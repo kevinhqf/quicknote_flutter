@@ -51,8 +51,25 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               ),
               // 按钮部件
               HomeButtonWidget(),
+              // label
+              Flex(
+                direction: Axis.horizontal,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 24, top: 8),
+                    child: Text(
+                      "最近收支",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  )
+                ],
+              ),
               // 列表
-              HomeListWidget()
+              Expanded(
+                child: HomeListWidget(),
+              )
+              
             ],
           ),
         ),
