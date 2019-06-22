@@ -14,7 +14,7 @@ class _ProfileTopWidgetState extends State<ProfileTopWidget> {
       children: <Widget>[
         //bg
         Image.asset(
-          'images/profile_bg.png',
+          'images/default_bg.png',
           width: MediaQuery.of(context).size.width,
           fit: BoxFit.cover,
         ),

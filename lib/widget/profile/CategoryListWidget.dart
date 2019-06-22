@@ -17,14 +17,14 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
           shrinkWrap: true,
           itemCount: 12,
           itemBuilder: (BuildContext context, int index) {
-            return _CategoryItemWidget();
+            return _categoryItemWidget();
           },
         ),
       ),
     );
   }
 
-  Widget _CategoryItemWidget() {
+  Widget _categoryItemWidget() {
     return Container(
       margin: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 4),
       height: 110,

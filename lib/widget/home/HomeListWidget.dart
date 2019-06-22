@@ -25,12 +25,6 @@ class _HomeListWidgetState extends State<HomeListWidget> {
     );
   }
 
-/* ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: 10,
-                itemBuilder: (BuildContext context, int index) {
-                  return _dataTile();
-                }) */
   Widget _dataTile() {
     return Container(
         margin: EdgeInsets.only(left: 16, right: 16, top: 12),
