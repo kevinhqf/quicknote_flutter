@@ -1,24 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:quicknote/data/ColorPattle.dart';
+import 'package:quicknote/data/TransactionView.dart';
 import 'package:quicknote/utils/Utils.dart';
 
 class SummaryCardWidget extends StatefulWidget {
+  List<TransactionView> _data;
+  _SummaryCardWidgetState _state;
   SummaryCardWidget({Key key}) : super(key: key);
 
-  _SummaryCardWidgetState createState() => _SummaryCardWidgetState();
+  _SummaryCardWidgetState createState() {
+    _state = _SummaryCardWidgetState();
+    return _state;
+  }
+
+  void setData(List<TransactionView> data) {
+    _data = data;
+    _state._totalBalance = _data.fold(0.0, (acc, tv) => acc + tv.value);
+    _state._todayBalance = _data
+        .where((item) => Utils.isToday(item.time))
+        .fold(0.0, (acc, tv) => acc + tv.value);
+    _state.setState(() {});
+  }
 }
 
 class _SummaryCardWidgetState extends State<SummaryCardWidget> {
-  double totalBalance = 12345676.0;
-  double todayBalance = 12345.0;
+  double _totalBalance = 0.00;
+  double _todayBalance = 0.00;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 3.0,
         color: Color(0xf2ffffff),
         child: Column(
@@ -45,7 +59,7 @@ class _SummaryCardWidgetState extends State<SummaryCardWidget> {
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    Utils.getMoneyFormat(totalBalance),
+                    Utils.getMoneyFormat(_totalBalance),
                     style: TextStyle(
                       fontFamily: 'Exo2',
                       fontSize: 36,
@@ -62,16 +76,23 @@ class _SummaryCardWidgetState extends State<SummaryCardWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "￥" + Utils.getMoneyFormat(todayBalance),
+                    "￥" + Utils.getMoneyFormat(_todayBalance),
                     style: TextStyle(
-                      color: Color(0xffff7171),
+                      color: _todayBalance < 0
+                          ? ColorPattle.GREEN
+                          : ColorPattle.RED,
                       fontFamily: 'Exo2',
                       fontSize: 24,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 5),
-                    child: Image.asset("images/up_sign.png"),
+                  Visibility(
+                    visible: _todayBalance != 0,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: Image.asset(_todayBalance < 0
+                          ? "images/down_sign.png"
+                          : "images/up_sign.png"),
+                    ),
                   )
                 ],
               ),

@@ -1,31 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:quicknote/data/ColorPattle.dart';
+import 'package:quicknote/utils/Utils.dart';
+import 'package:quicknote/data/TransactionView.dart';
 
 class HomeListWidget extends StatefulWidget {
-  HomeListWidget({Key key}) : super(key: key);
+  List<TransactionView> _datas;
+  State _state;
+  HomeListWidget();
 
-  _HomeListWidgetState createState() => _HomeListWidgetState();
+  _HomeListWidgetState createState() {
+    _state = _HomeListWidgetState();
+    return _state;
+  } 
+
+  void setData(List<TransactionView> datas){
+    this._datas = datas;
+     _state.setState((){
+
+     });
+  }
 }
 
 class _HomeListWidgetState extends State<HomeListWidget> {
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 8),
-      child: MediaQuery.removePadding(
-        removeTop: true,
-        context: context,
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: 10,
-          itemBuilder: (BuildContext context, int index) {
-            return _dataTile();
-          },
-        ),
-      ),
-    );
+  void initState() {
+    super.initState();
   }
 
-  Widget _dataTile() {
+  @override
+  Widget build(BuildContext context) {
+    if (widget._datas == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else
+      return Container(
+        margin: EdgeInsets.only(top: 8),
+        child: MediaQuery.removePadding(
+          removeTop: true,
+          context: context,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget._datas.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _dataTile(widget._datas[index]);
+            },
+          ),
+        ),
+      );
+  }
+
+  Widget _dataTile(TransactionView t) {
     return Container(
         margin: EdgeInsets.only(left: 16, right: 16, top: 12),
         child: Column(
@@ -43,22 +68,23 @@ class _HomeListWidgetState extends State<HomeListWidget> {
                     Row(
                       children: <Widget>[
                         Text(
-                          '-',
+                          t.value<0?'-':'+',
                           style:
-                              TextStyle(fontSize: 22, color: Color(0xff04d87f)),
+                              TextStyle(fontSize: 22, color: t.value<0?ColorPattle.GREEN:ColorPattle.RED),
                         ),
                         Text(
-                          '￥122,222,222.00',
+                          '￥${Utils.getMoneyFormat(t.value)}',
                           style: TextStyle(
                               fontSize: 20,
                               fontFamily: 'Exo2',
                               fontWeight: FontWeight.bold,
-                              color: Color(0xff04d87f)),
+                              color: t.value<0?ColorPattle.GREEN:ColorPattle.RED),
                         )
                       ],
                     ),
+                    // description
                     Text(
-                      'Type Something',
+                      t.description,
                       style: TextStyle(
                         fontSize: 18,
                         color: Color(0xff9b9b9b),
@@ -70,18 +96,20 @@ class _HomeListWidgetState extends State<HomeListWidget> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
+                    // time
                     Padding(
                       padding: EdgeInsets.only(right: 5),
                       child: Text(
-                        '06-21 13:11',
+                        Utils.getDateAndTime(t.time),
                         style: TextStyle(
                             fontSize: 15,
                             fontFamily: 'Exo2',
                             color: Color(0xff9b9b9b)),
                       ),
                     ),
-                    Image.asset(
-                      'images/icon_user.png',
+                    // icon
+                    Image.network(
+                      t.categoryIcon,
                       height: 45,
                       width: 45,
                     )

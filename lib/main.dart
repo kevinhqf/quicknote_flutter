@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         
-        body: DetailTransactionPageWidget(),
+        body: HomePageWidget(),
       ),
     );
   }

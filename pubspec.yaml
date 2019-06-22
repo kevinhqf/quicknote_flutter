@@ -18,6 +18,8 @@ environment:
 
 dependencies:
   sprintf: "^4.0.0"
+  http: ^0.12.0+2
+  intl: ^0.15.8
   flutter:
     sdk: flutter
 
