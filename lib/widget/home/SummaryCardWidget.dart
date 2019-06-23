@@ -15,6 +15,7 @@ class SummaryCardWidget extends StatefulWidget {
 
   void setData(List<TransactionView> data) {
     _data = data;
+    //todo  get a single api in server
     _state._totalBalance = _data.fold(0.0, (acc, tv) => acc + tv.value);
     _state._todayBalance = _data
         .where((item) => Utils.isToday(item.time))
@@ -91,7 +92,8 @@ class _SummaryCardWidgetState extends State<SummaryCardWidget> {
                       padding: EdgeInsets.only(left: 5),
                       child: Image.asset(_todayBalance < 0
                           ? "images/down_sign.png"
-                          : "images/up_sign.png"),
+                          : "images/up_sign.png",
+                          width: 20,),
                     ),
                   )
                 ],

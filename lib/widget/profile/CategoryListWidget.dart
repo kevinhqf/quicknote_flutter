@@ -1,42 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:quicknote/data/CategoryGroup.dart';
+import 'package:quicknote/utils/Utils.dart';
 
 class CategoryListWidget extends StatefulWidget {
+  List<CategoryGroup> _data;
+  _CategoryListWidgetState _state = _CategoryListWidgetState();
   CategoryListWidget({Key key}) : super(key: key);
 
-  _CategoryListWidgetState createState() => _CategoryListWidgetState();
+  _CategoryListWidgetState createState() => _state;
+
+  void setData(List<CategoryGroup> data) {
+    _data = data;
+    _state.setState(() {});
+  }
 }
 
 class _CategoryListWidgetState extends State<CategoryListWidget> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: MediaQuery.removePadding(
-        context: context,
-        removeTop: true,
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: 12,
-          itemBuilder: (BuildContext context, int index) {
-            return _categoryItemWidget();
-          },
+    if (widget._data == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else
+      return Container(
+        child: MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget._data.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _categoryItemWidget(widget._data[index]);
+            },
+          ),
         ),
-      ),
-    );
+      );
   }
 
-  Widget _categoryItemWidget() {
+  Widget _categoryItemWidget(CategoryGroup cg) {
     return Container(
       margin: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 4),
       height: 110,
       child: Card(
+        elevation: 2.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Stack(
           children: <Widget>[
             Container(
+              margin: EdgeInsets.only(right: 16),
               alignment: AlignmentDirectional.centerEnd,
               child: Opacity(
                 opacity: 0.37,
-                child: Image.asset(
-                  "images/icon_food.png",
+                child: Image.network(
+                  cg.categoryIcon,
                   width: 96,
                   height: 96,
                 ),
@@ -46,7 +63,7 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
               left: 16,
               top: 16,
               child: Text(
-                "饮食",
+                cg.categoryName,
                 style: TextStyle(
                     color: Color(0xff4a4a4a),
                     fontSize: 20,
@@ -57,7 +74,8 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
               bottom: 16,
               left: 16,
               child: Text(
-                "￥1,200.00",
+                (cg.value < 0 ? "-" : "") +
+                    "￥${Utils.getMoneyFormat(cg.value)}",
                 style: TextStyle(
                     fontFamily: 'Exo2',
                     color: Color(0xff4a4a4a),

@@ -93,6 +93,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                       Image.asset(
                         'images/down_sign.png',
                         fit: BoxFit.cover,
+                        width: 20,
                       )
                     ],
                   ),

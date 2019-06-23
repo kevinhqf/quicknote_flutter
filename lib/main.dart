@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         
-        body: HomePageWidget(),
+        body: ProfilePageWidget(),
       ),
     );
   }
