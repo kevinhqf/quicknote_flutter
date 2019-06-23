@@ -3,15 +3,22 @@ import 'package:quicknote/widget/transaction/detail/TimelineWidget.dart';
 import 'package:quicknote/widget/transaction/detail/TransactionListWidget.dart';
 import 'package:quicknote/widget/transaction/detail/TransactionTopWidget.dart';
 
-class DetailTransactionPageWidget extends StatefulWidget {
-  DetailTransactionPageWidget({Key key}) : super(key: key);
-
-  _DetailTransactionPageWidgetState createState() =>
-      _DetailTransactionPageWidgetState();
+class TransactionPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: TransactionPageWidget(),
+    );
+  }
 }
 
-class _DetailTransactionPageWidgetState
-    extends State<DetailTransactionPageWidget> {
+class TransactionPageWidget extends StatefulWidget {
+  TransactionPageWidget({Key key}) : super(key: key);
+
+  _TransactionPageWidgetState createState() => _TransactionPageWidgetState();
+}
+
+class _TransactionPageWidgetState extends State<TransactionPageWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(

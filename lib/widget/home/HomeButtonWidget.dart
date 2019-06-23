@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quicknote/widget/transaction/new/NewTransactionPage.dart';
 
 class HomeButtonWidget extends StatefulWidget {
   HomeButtonWidget({Key key}) : super(key: key);
@@ -48,7 +49,11 @@ class _HomeButtonWidgetState extends State<HomeButtonWidget> {
     );
   }
 
-  void _onIncomeBtnPressed() {}
+  void _onIncomeBtnPressed() {
+    Navigator.pushNamed(context, '/newTransaction',arguments: NewTransactionPage.TYPE_INCOME);
+  }
 
-  void _onSpendBtnPressed(){}
+  void _onSpendBtnPressed(){
+    Navigator.pushNamed(context, '/newTransaction',arguments: NewTransactionPage.TYPE_SPEND);
+  }
 }

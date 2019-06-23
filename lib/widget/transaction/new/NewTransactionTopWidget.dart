@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
+import 'package:quicknote/utils/Utils.dart';
+import 'package:quicknote/widget/transaction/new/NewTransactionPage.dart';
 
 class NewTransactionTopWidget extends StatefulWidget {
-  NewTransactionTopWidget({Key key}) : super(key: key);
+  int type = -1;
+
+  NewTransactionTopWidget(this.type);
 
   _NewTransactionTopWidgetState createState() =>
       _NewTransactionTopWidgetState();
 }
 
 class _NewTransactionTopWidgetState extends State<NewTransactionTopWidget> {
+  GlobalKey<FormState> _descKey = GlobalKey<FormState>();
+  TransactionViewModel _model;
   @override
   Widget build(BuildContext context) {
+    _model = Provider.of<TransactionViewModel>(context);
     return Stack(
       children: <Widget>[
         // top bg
@@ -27,7 +36,7 @@ class _NewTransactionTopWidgetState extends State<NewTransactionTopWidget> {
               padding: EdgeInsets.only(
                   left: 24, top: MediaQuery.of(context).padding.top),
               child: Text(
-                '收入',
+                widget.type == NewTransactionPage.TYPE_INCOME ? '收入' : '支出',
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -51,7 +60,7 @@ class _NewTransactionTopWidgetState extends State<NewTransactionTopWidget> {
                     ),
                   ),
                   Text(
-                    '123,456,789.00',
+                    _model.newValueStr,
                     style: TextStyle(
                       fontFamily: 'Exo2',
                       color: Colors.white,
@@ -74,11 +83,20 @@ class _NewTransactionTopWidgetState extends State<NewTransactionTopWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    '点击编辑描述',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => _onEditDescription());
+                    },
+                    child: Text(
+                      _model.newDescription.isEmpty
+                          ? '点击编辑描述'
+                          : _model.newDescription,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   Image.asset(
@@ -90,6 +108,46 @@ class _NewTransactionTopWidgetState extends State<NewTransactionTopWidget> {
               ),
             )
           ],
+        )
+      ],
+    );
+  }
+
+  Widget _onEditDescription() {
+    return SimpleDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      contentPadding: EdgeInsets.all(0),
+      children: <Widget>[
+        Form(
+          key: _descKey,
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 24),
+                child: TextFormField(
+                  controller: TextEditingController(text: _model?.newDescription),
+                  keyboardType: TextInputType.text,
+                  decoration: const InputDecoration(
+                    hintText: '请输入收入描述',
+                    labelText: '收支描述',
+                    labelStyle: TextStyle(fontSize: 18),
+                  ),
+                  onSaved: (value) {
+                    _model?.setNewDescription(value);
+                  },
+                  
+                ),
+              ),
+              FlatButton(
+                onPressed: () {
+                  _descKey.currentState.save();
+                  Navigator.of(context).pop();
+                  setState(() {});
+                },
+                child: Text('确定'),
+              )
+            ],
+          ),
         )
       ],
     );

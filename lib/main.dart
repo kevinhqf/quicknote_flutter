@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:quicknote/widget/home/HomePageWidget.dart';
-import 'package:quicknote/widget/login/LoginPageWidget.dart';
-import 'package:quicknote/widget/profile/ProfilePageWidget.dart';
-import 'package:quicknote/widget/transaction/detail/DetailTransactionPageWidget.dart';
-import 'package:quicknote/widget/transaction/new/NewTransactionPageWidget.dart';
+import 'package:provider/provider.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
+import 'package:quicknote/widget/home/HomePage.dart';
+import 'package:quicknote/widget/login/LoginPage.dart';
+import 'package:quicknote/widget/profile/ProfilePage.dart';
+import 'package:quicknote/widget/transaction/new/NewTransactionPage.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  Provider.debugCheckInvalidValueType = null;
+  var transactionModel =  TransactionViewModel();
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<TransactionViewModel>.value(
+        value:transactionModel,
+      ),
+    ],
+    child: MyApp(),
+  ));
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -15,13 +27,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: Scaffold(
-        
-        body: ProfilePageWidget(),
-      ),
+      initialRoute: '/profile',
+      routes: {
+        '/home': (context) => HomePage(),
+        '/login': (context) => LoginPage(),
+        '/newTransaction': (context) => NewTransactionPage(),
+        '/profile':(context) => ProfilePage(),
+      },
+      home: ProfilePage(),
     );
   }
 }
-
-
-

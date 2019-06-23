@@ -1,35 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:quicknote/data/ColorPattle.dart';
-import 'package:quicknote/data/TransactionView.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/utils/Utils.dart';
-
+import 'package:provider/provider.dart';
 class SummaryCardWidget extends StatefulWidget {
-  List<TransactionView> _data;
-  _SummaryCardWidgetState _state;
+
   SummaryCardWidget({Key key}) : super(key: key);
 
-  _SummaryCardWidgetState createState() {
-    _state = _SummaryCardWidgetState();
-    return _state;
-  }
+  _SummaryCardWidgetState createState() =>_SummaryCardWidgetState();
 
-  void setData(List<TransactionView> data) {
-    _data = data;
-    //todo  get a single api in server
-    _state._totalBalance = _data.fold(0.0, (acc, tv) => acc + tv.value);
-    _state._todayBalance = _data
-        .where((item) => Utils.isToday(item.time))
-        .fold(0.0, (acc, tv) => acc + tv.value);
-    _state.setState(() {});
-  }
 }
 
 class _SummaryCardWidgetState extends State<SummaryCardWidget> {
-  double _totalBalance = 0.00;
-  double _todayBalance = 0.00;
+  TransactionViewModel _model;
 
   @override
   Widget build(BuildContext context) {
+    _model = Provider.of<TransactionViewModel>(context);
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Card(
@@ -60,7 +47,7 @@ class _SummaryCardWidgetState extends State<SummaryCardWidget> {
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    Utils.getMoneyFormat(_totalBalance),
+                    Utils.getMoneyFormat(_model.homeTotalBalance),
                     style: TextStyle(
                       fontFamily: 'Exo2',
                       fontSize: 36,
@@ -77,9 +64,9 @@ class _SummaryCardWidgetState extends State<SummaryCardWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "￥" + Utils.getMoneyFormat(_todayBalance),
+                    "￥" + Utils.getMoneyFormat(_model.homeTodayBalance),
                     style: TextStyle(
-                      color: _todayBalance < 0
+                      color: _model.homeTodayBalance < 0
                           ? ColorPattle.GREEN
                           : ColorPattle.RED,
                       fontFamily: 'Exo2',
@@ -87,10 +74,10 @@ class _SummaryCardWidgetState extends State<SummaryCardWidget> {
                     ),
                   ),
                   Visibility(
-                    visible: _todayBalance != 0,
+                    visible: _model.homeTodayBalance != 0,
                     child: Padding(
                       padding: EdgeInsets.only(left: 5),
-                      child: Image.asset(_todayBalance < 0
+                      child: Image.asset(_model.homeTodayBalance < 0
                           ? "images/down_sign.png"
                           : "images/up_sign.png",
                           width: 20,),

@@ -1,35 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quicknote/data/ColorPattle.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/utils/Utils.dart';
 import 'package:quicknote/data/TransactionView.dart';
 
 class HomeListWidget extends StatefulWidget {
-  List<TransactionView> _datas;
-  State _state;
+  
   HomeListWidget();
 
-  _HomeListWidgetState createState() {
-    _state = _HomeListWidgetState();
-    return _state;
-  } 
+  _HomeListWidgetState createState() =>_HomeListWidgetState();
 
-  void setData(List<TransactionView> datas){
-    this._datas = datas;
-     _state.setState((){
-
-     });
-  }
 }
 
 class _HomeListWidgetState extends State<HomeListWidget> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  
+  TransactionViewModel _model;
 
   @override
   Widget build(BuildContext context) {
-    if (widget._datas == null) {
+    _model = Provider.of<TransactionViewModel>(context);
+    
+    if (_model?.allTransactions == null) {
       return Center(
         child: CircularProgressIndicator(),
       );
@@ -41,9 +33,9 @@ class _HomeListWidgetState extends State<HomeListWidget> {
           context: context,
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: widget._datas.length,
+            itemCount: _model.allTransactions.length,
             itemBuilder: (BuildContext context, int index) {
-              return _dataTile(widget._datas[index]);
+              return _dataTile(_model.allTransactions[index]);
             },
           ),
         ),

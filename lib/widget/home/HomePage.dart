@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quicknote/api/API.dart';
 import 'package:quicknote/data/TransactionView.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/widget/home/HomeButtonWidget.dart';
 import 'package:quicknote/widget/home/HomeListWidget.dart';
 import 'package:quicknote/widget/home/SummaryCardWidget.dart';
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: HomePageWidget(),
+    );
+  }
+}
 
 class HomePageWidget extends StatefulWidget {
   HomePageWidget({Key key}) : super(key: key);
@@ -12,18 +23,16 @@ class HomePageWidget extends StatefulWidget {
 }
 
 class _HomePageWidgetState extends State<HomePageWidget> {
-  List<TransactionView> _transactions;
-  HomeListWidget _homeListWidget = HomeListWidget();
-  SummaryCardWidget _cardWidget = SummaryCardWidget();
+  TransactionViewModel _model;
+
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     API.getAllTransactions(4).then((value) {
-      _transactions = value;
-      _homeListWidget.setData(_transactions);
-      _cardWidget.setData(_transactions);
+      _model=Provider.of<TransactionViewModel>(context);
+      _model.setAllTransactions(value);
     });
-
   }
 
   @override
@@ -52,10 +61,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       "首页",
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
-                    Image.asset(
-                      "images/icon_user.png",
-                      height: 40,
-                      width: 40,
+                    GestureDetector(
+                      child: Image.asset(
+                        "images/icon_user.png",
+                        height: 40,
+                        width: 40,
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
                     )
                   ],
                 ),
@@ -63,7 +77,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               // 卡片部件
               Padding(
                 padding: EdgeInsets.only(top: 8, left: 24, right: 24),
-                child: _cardWidget,
+                child: SummaryCardWidget(),
               ),
               // 按钮部件
               HomeButtonWidget(),
@@ -83,7 +97,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               ),
               // 列表
               Expanded(
-                child: _homeListWidget,
+                child: HomeListWidget(),
               )
             ],
           ),

@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quicknote/api/API.dart';
-import 'package:quicknote/data/CategoryGroup.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/widget/profile/CategoryListWidget.dart';
 import 'package:quicknote/widget/profile/ProfileTopWidget.dart';
+
+class ProfilePage extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context) {
+    
+    return Scaffold(body: ProfilePageWidget(),);
+  }
+}
 
 class ProfilePageWidget extends StatefulWidget {
   ProfilePageWidget({Key key}) : super(key: key);
@@ -11,30 +21,31 @@ class ProfilePageWidget extends StatefulWidget {
 }
 
 class _ProfilePageWidgetState extends State<ProfilePageWidget> {
-  
-  CategoryListWidget _listWidget = CategoryListWidget();
-  ProfileTopWidget _topWidget = ProfileTopWidget();
+  TransactionViewModel _model;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    
     API.getCategoryGroups(4).then((value) {
-      _listWidget.setData(value);
+       _model=Provider.of<TransactionViewModel>(context);
+      _model?.setCategoryGroups(value);
     });
-    API.getAllTransactions(4).then((value){
-      _topWidget.setData(value);
-    });
+    
   }
 
   @override
   Widget build(BuildContext context) {
+    
+
     return Column(
       children: <Widget>[
         //top
-        _topWidget,
+        ProfileTopWidget(),
         // category list
         Expanded(
-          child: _listWidget,
+          child: CategoryListWidget(),
         )
       ],
     );

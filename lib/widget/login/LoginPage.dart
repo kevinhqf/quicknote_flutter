@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:quicknote/widget/login/LoginCardWidget.dart';
+class LoginPage extends StatelessWidget{
 
+  @override
+  Widget build(BuildContext context) {
+    
+    return Scaffold(
+      body: LoginPageWidget(),
+    );
+  }
+}
 class LoginPageWidget extends StatefulWidget {
   LoginPageWidget({Key key}) : super(key: key);
 

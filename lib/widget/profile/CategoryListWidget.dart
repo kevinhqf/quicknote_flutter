@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:quicknote/data/CategoryGroup.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/utils/Utils.dart';
+import 'package:provider/provider.dart';
 
 class CategoryListWidget extends StatefulWidget {
-  List<CategoryGroup> _data;
-  _CategoryListWidgetState _state = _CategoryListWidgetState();
   CategoryListWidget({Key key}) : super(key: key);
 
-  _CategoryListWidgetState createState() => _state;
-
-  void setData(List<CategoryGroup> data) {
-    _data = data;
-    _state.setState(() {});
-  }
+  _CategoryListWidgetState createState() => _CategoryListWidgetState();
 }
 
 class _CategoryListWidgetState extends State<CategoryListWidget> {
+  TransactionViewModel _model;
   @override
   Widget build(BuildContext context) {
-    if (widget._data == null) {
+    _model = Provider.of<TransactionViewModel>(context);
+    if (_model.categoryGroups == null) {
       return Center(
         child: CircularProgressIndicator(),
       );
@@ -29,9 +26,9 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
           removeTop: true,
           child: ListView.builder(
             shrinkWrap: true,
-            itemCount: widget._data.length,
+            itemCount: _model.categoryGroups.length,
             itemBuilder: (BuildContext context, int index) {
-              return _categoryItemWidget(widget._data[index]);
+              return _categoryItemWidget(_model.categoryGroups[index]);
             },
           ),
         ),
