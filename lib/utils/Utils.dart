@@ -76,12 +76,16 @@ class Utils {
     return time.substring(0, 10) == formatter.format(DateTime.now());
   }
 
+  static String getNowDate() {
+    return DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+  }
+
   static bool isSameDate(String time1, String time2) {
     return getDate(time1) == getDate(time2);
   }
 
-  static bool isSameYearAndMonthWith(String yearAndMonth,String time){
-    return yearAndMonth==getYearAndMonth(time);
+  static bool isSameYearAndMonthWith(String yearAndMonth, String time) {
+    return yearAndMonth == getYearAndMonth(time);
   }
 
   static bool isPhoneNumber(String phone) {

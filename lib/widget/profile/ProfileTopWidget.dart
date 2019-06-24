@@ -96,7 +96,7 @@ class _ProfileTopWidgetState extends State<ProfileTopWidget> {
                 onPressed: () {
                   SPUtil().save(UserViewModel.KEY_USER_ID, -1);
                   SPUtil().save(UserViewModel.KEY_IS_USER_LOGIN, false);
-                  _model.clearData();
+                  _model.clearAllData();
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },

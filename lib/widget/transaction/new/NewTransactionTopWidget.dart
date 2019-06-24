@@ -5,9 +5,9 @@ import 'package:quicknote/utils/Utils.dart';
 import 'package:quicknote/widget/transaction/new/NewTransactionPage.dart';
 
 class NewTransactionTopWidget extends StatefulWidget {
-  int type = -1;
+  
 
-  NewTransactionTopWidget(this.type);
+  NewTransactionTopWidget();
 
   _NewTransactionTopWidgetState createState() =>
       _NewTransactionTopWidgetState();
@@ -36,7 +36,7 @@ class _NewTransactionTopWidgetState extends State<NewTransactionTopWidget> {
               padding: EdgeInsets.only(
                   left: 24, top: MediaQuery.of(context).padding.top),
               child: Text(
-                widget.type == NewTransactionPage.TYPE_INCOME ? '收入' : '支出',
+                _model.newType == TransactionViewModel.NEW_TYPE_INCOME ? '收入' : '支出',
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

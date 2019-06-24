@@ -11,6 +11,27 @@ import 'package:quicknote/data/UserResponse.dart';
 class API {
   static const _BASE_URL = 'http://127.0.0.1:8000';
 
+  static Future<String> addTransaction(TransactionView tv) async {
+    String res;
+    try {
+      var url = _BASE_URL + "/transaction/add";
+      final response = await http.post(url, body: {
+        "description": tv.description,
+        "value": tv.value.toString(),
+        "type": tv.type.toString(),
+        "time": tv.time,
+        "categoryId": tv.categoryId.toString(),
+        "userId": tv.userId.toString(),
+      });
+      if (response.statusCode == 200) {
+        res = response.body;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return res;
+  }
+
   static Future<List<TransactionView>> getAllTransactions(int userId) async {
     List<TransactionView> list = List();
     try {
@@ -90,8 +111,8 @@ class API {
 
     try {
       var url = _BASE_URL + "/user/login";
-      final response =
-          await http.post(url, body: {'phone': phone, 'password': encryptPwd.toString()});
+      final response = await http
+          .post(url, body: {'phone': phone, 'password': encryptPwd.toString()});
       if (response.statusCode == 200) {
         var resJson = json.decode(response.body);
         user = UserResponse.fromJson(resJson);
@@ -101,14 +122,15 @@ class API {
     }
     return user;
   }
+
   static Future<UserResponse> signup(String phone, String password) async {
     UserResponse user;
     var encryptPwd = md5.convert(utf8.encode(password));
 
     try {
       var url = _BASE_URL + "/user/signup";
-      final response =
-          await http.post(url, body: {'phone': phone, 'password': encryptPwd.toString()});
+      final response = await http
+          .post(url, body: {'phone': phone, 'password': encryptPwd.toString()});
       if (response.statusCode == 200) {
         var resJson = json.decode(response.body);
         user = UserResponse.fromJson(resJson);

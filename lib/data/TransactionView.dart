@@ -9,6 +9,9 @@ class TransactionView {
   String categoryIcon;
   int userId;
 
+  TransactionView(this.id, this.description, this.value, this.type, this.time,
+      this.categoryId, this.categoryName, this.categoryIcon, this.userId);
+
   TransactionView.fromJson(Map<String, dynamic> map)
       : id = map['id'],
         description = map['description'],

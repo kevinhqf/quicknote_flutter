@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:quicknote/api/API.dart';
 import 'package:quicknote/data/CategoryGroup.dart';
 import 'package:quicknote/data/CategoryTransaction.dart';
 import 'package:quicknote/data/TransactionView.dart';
+import 'package:quicknote/model/UserViewModel.dart';
+import 'package:quicknote/utils/SPUtil.dart';
 import 'package:quicknote/utils/Utils.dart';
 
 class TransactionViewModel with ChangeNotifier {
+  static const NEW_TYPE_INCOME = 1;
+  static const NEW_TYPE_SPEND = 0;
   // new transaction page
-  int _newType;
+  int _newType = -1;
   String _newValueStr = "0";
   String _newDescription = "";
+  int _newCategoryId = -1;
+
   // home page
   List<TransactionView> _allTransactions = List();
   double _homeTotalBalance = 0.0;
@@ -28,6 +35,51 @@ class TransactionViewModel with ChangeNotifier {
   double _transactionIncome = 0.0;
   double _transactionSpend = 0.0;
   String _transactionMonthBalance = "￥0";
+
+  void setNewCategoryId(int newCategoryId) {
+    _newCategoryId = newCategoryId;
+    notifyListeners();
+  }
+
+  void setNewType(int newType) {
+    _newType = newType;
+    notifyListeners();
+  }
+
+  void addTransaction(String tmpDescription) {
+    SPUtil().getBool(UserViewModel.KEY_IS_USER_LOGIN).then((isLogin) {
+      if (isLogin) {
+        SPUtil().getInt(UserViewModel.KEY_USER_ID).then((userId) {
+          TransactionView tv = TransactionView(
+              null,
+              _newDescription.isEmpty ? tmpDescription : _newDescription,
+              _newType == NEW_TYPE_SPEND
+                  ? (double.parse(_newValueStr) * -1)
+                  : (double.parse(_newValueStr)),
+              _newType,
+              Utils.getNowDate(),
+              _newCategoryId,
+              null,
+              null,
+              userId);
+          // 服务器添加数据
+          API.addTransaction(tv).then((value) {
+            _clearAllNewData();
+            API.getAllTransactions(userId ?? -1).then((value) {
+              setAllTransactions(value);
+            });
+          });
+        });
+      }
+    });
+  }
+
+  void _clearAllNewData() {
+    _newType = -1;
+    _newValueStr = "0";
+    _newDescription = "";
+    _newCategoryId = -1;
+  }
 
   void setCategoryTransactions(List<CategoryTransaction> data) {
     _categoryTransactions = data;
@@ -98,7 +150,9 @@ class TransactionViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void clearData() {
+  void clearAllData() {
+    _newCategoryId = -1;
+    _newType = -1;
     _newValueStr = "0";
     _newDescription = "";
     // home page
@@ -120,8 +174,11 @@ class TransactionViewModel with ChangeNotifier {
     _transactionIncome = 0.0;
     _transactionSpend = 0.0;
     _transactionMonthBalance = "￥0";
+    notifyListeners();
   }
 
+  int get newCategoryId => _newCategoryId;
+  int get newType => _newType;
   String get newValueStr => _newValueStr;
   String get newDescription => _newDescription;
 

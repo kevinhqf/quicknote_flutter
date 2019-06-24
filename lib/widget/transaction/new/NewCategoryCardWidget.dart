@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:quicknote/api/API.dart';
 import 'package:quicknote/data/Category.dart';
 import 'package:quicknote/data/ColorPattle.dart';
 import 'package:quicknote/model/CategoryViewModel.dart';
 import 'package:provider/provider.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
+import 'package:quicknote/model/UserViewModel.dart';
+import 'package:quicknote/utils/SPUtil.dart';
+import 'package:quicknote/utils/ToastUtil.dart';
 
 class NewCategoryCardWidget extends StatefulWidget {
   NewCategoryCardWidget({Key key}) : super(key: key);
@@ -12,10 +17,13 @@ class NewCategoryCardWidget extends StatefulWidget {
 
 class _NewCategoryCardWidgetState extends State<NewCategoryCardWidget> {
   CategoryViewModel _model;
+  TransactionViewModel _transactionViewModel;
   var _isSelection = List.filled(12, false);
+  String _tmpDescription="";
   @override
   Widget build(BuildContext context) {
     _model = Provider.of<CategoryViewModel>(context);
+    _transactionViewModel = Provider.of<TransactionViewModel>(context);
     return Column(
       children: <Widget>[
         Container(
@@ -62,7 +70,7 @@ class _NewCategoryCardWidgetState extends State<NewCategoryCardWidget> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   padding: EdgeInsets.only(top: 10, bottom: 10),
-                  onPressed: () {},
+                  onPressed: _addTransaction,
                   color: Color(0xffff7171),
                   child: Text(
                     '完成',
@@ -78,8 +86,8 @@ class _NewCategoryCardWidgetState extends State<NewCategoryCardWidget> {
   }
 
   void _setSelection(int index) {
-    for(var i=0;i<_isSelection.length;i++){
-      _isSelection[i]=false;
+    for (var i = 0; i < _isSelection.length; i++) {
+      _isSelection[i] = false;
     }
     _isSelection[index] = true;
   }
@@ -99,6 +107,8 @@ class _NewCategoryCardWidgetState extends State<NewCategoryCardWidget> {
                       ? ColorPattle.RED
                       : Colors.transparent)),
           onPressed: () {
+            _transactionViewModel.setNewCategoryId(c.category_id);
+            _tmpDescription = c.name;
             setState(() {
               _setSelection(index);
             });
@@ -122,5 +132,20 @@ class _NewCategoryCardWidgetState extends State<NewCategoryCardWidget> {
         )
       ],
     );
+  }
+
+  _addTransaction() {
+    var newValue = _transactionViewModel.newValueStr;
+    var newCategory = _transactionViewModel.newCategoryId;
+    if (double.parse(newValue) == 0) {
+      ToastUtil.show("收支数值不能为0");
+      return;
+    }
+    if (newCategory == -1) {
+      ToastUtil.show("请选择相关分类");
+      return;
+    }
+    _transactionViewModel.addTransaction(_tmpDescription);
+    Navigator.pop(context);
   }
 }

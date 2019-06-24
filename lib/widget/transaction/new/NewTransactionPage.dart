@@ -7,22 +7,19 @@ import 'package:quicknote/widget/transaction/new/NewTransactionTopWidget.dart';
 import 'package:quicknote/widget/transaction/new/NumpadWidget.dart';
 import 'package:provider/provider.dart';
 class NewTransactionPage extends StatelessWidget {
-  static const TYPE_INCOME = 1;
-  static const TYPE_SPEND = 0;
-  int type = -1;
+  
   @override
   Widget build(BuildContext context) {
-    type = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      body: NewTransactionPageWidget(this.type),
+      body: NewTransactionPageWidget(),
     );
   }
 }
 
 class NewTransactionPageWidget extends StatefulWidget {
-  int type = -1;
+ 
 
-  NewTransactionPageWidget(this.type);
+  NewTransactionPageWidget();
 
   _NewTransactionPageWidgetState createState() =>
       _NewTransactionPageWidgetState();
@@ -50,7 +47,7 @@ class _NewTransactionPageWidgetState extends State<NewTransactionPageWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             //top
-            NewTransactionTopWidget(widget.type),
+            NewTransactionTopWidget(),
             //numpad
             Expanded(
               child: NumpadWidget(),
