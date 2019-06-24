@@ -32,7 +32,7 @@ class _LoginCardWidgetState extends State<LoginCardWidget> {
                       padding: EdgeInsets.only(
                           left: 24, right: 24, top: 24, bottom: 8),
                       child: TextFormField(
-                        autofocus: true,
+                        
                         keyboardType: TextInputType.phone,
                         decoration: const InputDecoration(
                           helperStyle: TextStyle(color: Colors.red),

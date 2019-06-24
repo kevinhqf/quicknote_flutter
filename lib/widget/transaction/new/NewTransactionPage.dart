@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:quicknote/api/API.dart';
+import 'package:quicknote/data/ColorPattle.dart';
+import 'package:quicknote/model/CategoryViewModel.dart';
 import 'package:quicknote/widget/transaction/new/NewCategoryCardWidget.dart';
 import 'package:quicknote/widget/transaction/new/NewTransactionTopWidget.dart';
 import 'package:quicknote/widget/transaction/new/NumpadWidget.dart';
-
+import 'package:provider/provider.dart';
 class NewTransactionPage extends StatelessWidget {
   static const TYPE_INCOME = 1;
   static const TYPE_SPEND = 0;
@@ -18,7 +21,7 @@ class NewTransactionPage extends StatelessWidget {
 
 class NewTransactionPageWidget extends StatefulWidget {
   int type = -1;
-  double value = 0.0;
+
   NewTransactionPageWidget(this.type);
 
   _NewTransactionPageWidgetState createState() =>
@@ -27,6 +30,17 @@ class NewTransactionPageWidget extends StatefulWidget {
 
 class _NewTransactionPageWidgetState extends State<NewTransactionPageWidget> {
   bool _isCardVisible = false;
+  CategoryViewModel _categoryModel;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    API.getCategories().then((value){
+      _categoryModel = Provider.of<CategoryViewModel>(context);
+      _categoryModel.setCategories(value);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -41,6 +55,7 @@ class _NewTransactionPageWidgetState extends State<NewTransactionPageWidget> {
             Expanded(
               child: NumpadWidget(),
             ),
+
             //bottom btn
             Container(
               height: 100,
@@ -55,7 +70,7 @@ class _NewTransactionPageWidgetState extends State<NewTransactionPageWidget> {
                       onPressed: () {
                         _onButtonAction();
                       },
-                      color: Color(0xffff7171),
+                      color: ColorPattle.RED,
                       child: Text(
                         '选择分类',
                         style: TextStyle(color: Colors.white, fontSize: 18),
@@ -67,9 +82,18 @@ class _NewTransactionPageWidgetState extends State<NewTransactionPageWidget> {
             )
           ],
         ),
+        Visibility(
+          visible: _isCardVisible,
+          child: GestureDetector(
+            onTap: _toggleCardVisibility,
+            child: Container(
+              color: Color(0x3C000000),
+            ),
+          ),
+        ),
         // 分类卡片
         Positioned(
-            bottom: 138,
+            bottom: 0,
             width: MediaQuery.of(context).size.width,
             child: Visibility(
               visible: _isCardVisible,
@@ -80,8 +104,12 @@ class _NewTransactionPageWidgetState extends State<NewTransactionPageWidget> {
   }
 
   void _onButtonAction() {
+    _toggleCardVisibility();
+  }
+
+  void _toggleCardVisibility() {
     setState(() {
-      _isCardVisible = true;
+      _isCardVisible = !_isCardVisible;
     });
   }
 }
