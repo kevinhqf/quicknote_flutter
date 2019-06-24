@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:quicknote/data/ColorPattle.dart';
+import 'package:quicknote/model/UserViewModel.dart';
 import 'package:quicknote/widget/login/LoginCardWidget.dart';
-class LoginPage extends StatelessWidget{
-
+import 'package:provider/provider.dart';
+class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: LoginPageWidget(),
     );
   }
 }
+
 class LoginPageWidget extends StatefulWidget {
   LoginPageWidget({Key key}) : super(key: key);
 
@@ -17,8 +19,11 @@ class LoginPageWidget extends StatefulWidget {
 }
 
 class _LoginPageWidgetState extends State<LoginPageWidget> {
+  UserViewModel _model;
+ 
   @override
   Widget build(BuildContext context) {
+    _model = Provider.of<UserViewModel>(context);
     return Container(
       child: Stack(
         children: <Widget>[
@@ -34,23 +39,35 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
             children: <Widget>[
               //顶部 label
               Container(
-                margin: EdgeInsets.only(top: 100,left: 78,right: 78),
+                margin: EdgeInsets.only(top: 100, left: 78, right: 78),
                 child: Flex(
                   direction: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      '登录',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Color(0xffff7171)
+                    GestureDetector(
+                      onTap: () {
+                        _model.setLoginActive(true);
+                      },
+                      child: Text(
+                        '登录',
+                        style: TextStyle(
+                            fontSize: 24,
+                            color: _model.isLoginActive
+                                ? ColorPattle.RED
+                                : ColorPattle.TEXT_GRAY),
                       ),
                     ),
-                    Text(
-                      '注册',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Color(0xff8a8d97)
+                    GestureDetector(
+                      onTap: () {
+                         _model.setLoginActive(false);
+                      },
+                      child: Text(
+                        '注册',
+                        style: TextStyle(
+                            fontSize: 24,
+                            color: !_model.isLoginActive
+                                ? ColorPattle.RED
+                                : ColorPattle.TEXT_GRAY),
                       ),
                     )
                   ],

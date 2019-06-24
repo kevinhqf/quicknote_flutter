@@ -79,6 +79,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             Navigator.pushNamed(context, '/profile');
                           } else {
                             Navigator.pushNamed(context, '/login');
+                            Provider.of<UserViewModel>(context).setLoginActive(true);
                           }
                         });
                       },

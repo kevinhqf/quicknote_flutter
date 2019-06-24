@@ -101,4 +101,21 @@ class API {
     }
     return user;
   }
+  static Future<UserResponse> signup(String phone, String password) async {
+    UserResponse user;
+    var encryptPwd = md5.convert(utf8.encode(password));
+
+    try {
+      var url = _BASE_URL + "/user/signup";
+      final response =
+          await http.post(url, body: {'phone': phone, 'password': encryptPwd.toString()});
+      if (response.statusCode == 200) {
+        var resJson = json.decode(response.body);
+        user = UserResponse.fromJson(resJson);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return user;
+  }
 }

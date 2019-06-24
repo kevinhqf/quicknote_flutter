@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:quicknote/api/API.dart';
+import 'package:quicknote/data/User.dart';
 import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/model/UserViewModel.dart';
 import 'package:quicknote/utils/SPUtil.dart';
+import 'package:quicknote/utils/ToastUtil.dart';
 import 'package:quicknote/utils/Utils.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class LoginCardWidget extends StatefulWidget {
@@ -17,8 +18,10 @@ class _LoginCardWidgetState extends State<LoginCardWidget> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _phone = "";
   String _password = "";
+  UserViewModel _model;
   @override
   Widget build(BuildContext context) {
+    _model = Provider.of<UserViewModel>(context);
     return Container(
         margin: EdgeInsets.only(top: 8, left: 32, right: 32),
         child: Form(
@@ -97,25 +100,33 @@ class _LoginCardWidgetState extends State<LoginCardWidget> {
   void _onActionPressed() {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      API.login(_phone, _password).then((value) {
-        if (value.user != null) {
-          SPUtil().save(UserViewModel.KEY_IS_USER_LOGIN, true);
-          SPUtil().save(UserViewModel.KEY_USER_ID, value.user.user_id);
-          Navigator.pop(context);
-          // 刷新首页数据
-          API.getAllTransactions(value.user.user_id).then((value) {
-            Provider.of<TransactionViewModel>(context)
-                .setAllTransactions(value);
-          });
-        }
-        Fluttertoast.showToast(
-            msg: value.md.message,
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIos: 1,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      });
+      //登录
+      if (_model.isLoginActive) {
+        API.login(_phone, _password).then((value) {
+          if (value.user != null) {
+            _saveUserAndPullHomePageData(value.user);
+          }
+          ToastUtil.show(value.md.message);
+        });
+      } else {
+        //注册
+        API.signup(_phone, _password).then((value) {
+          if (value.user != null) {
+            _saveUserAndPullHomePageData(value.user);
+          }
+          ToastUtil.show(value.md.message);
+        });
+      }
     }
+  }
+
+  void _saveUserAndPullHomePageData(User user) {
+    SPUtil().save(UserViewModel.KEY_IS_USER_LOGIN, true);
+    SPUtil().save(UserViewModel.KEY_USER_ID, user.user_id);
+    Navigator.pop(context);
+    // 刷新首页数据
+    API.getAllTransactions(user.user_id).then((value) {
+      Provider.of<TransactionViewModel>(context).setAllTransactions(value);
+    });
   }
 }

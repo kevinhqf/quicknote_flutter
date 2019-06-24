@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quicknote/model/CategoryViewModel.dart';
 import 'package:quicknote/model/TransactionViewModel.dart';
+import 'package:quicknote/model/UserViewModel.dart';
 import 'package:quicknote/widget/home/HomePage.dart';
 import 'package:quicknote/widget/login/LoginPage.dart';
 import 'package:quicknote/widget/profile/ProfilePage.dart';
@@ -12,6 +13,7 @@ void main() {
   Provider.debugCheckInvalidValueType = null;
   var transactionModel =  TransactionViewModel();
   var categoryModel = CategoryViewModel();
+  var userModel = UserViewModel();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<TransactionViewModel>.value(
@@ -20,6 +22,9 @@ void main() {
       ChangeNotifierProvider<CategoryViewModel>.value(
         value:categoryModel,
       ),
+      ChangeNotifierProvider<UserViewModel>.value(
+        value: userModel,
+      )
     ],
     child: MyApp(),
   ));
