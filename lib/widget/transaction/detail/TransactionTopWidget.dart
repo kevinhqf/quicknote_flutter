@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
+import 'package:provider/provider.dart';
+import 'package:quicknote/utils/Utils.dart';
 
 class TransactionTopWidget extends StatefulWidget {
   TransactionTopWidget({Key key}) : super(key: key);
@@ -7,8 +10,10 @@ class TransactionTopWidget extends StatefulWidget {
 }
 
 class _TransactionTopWidgetState extends State<TransactionTopWidget> {
+  TransactionViewModel _model;
   @override
   Widget build(BuildContext context) {
+    _model = Provider.of<TransactionViewModel>(context);
     return Container(
       child: Stack(
         children: <Widget>[
@@ -30,9 +35,11 @@ class _TransactionTopWidgetState extends State<TransactionTopWidget> {
                     FlatButton.icon(
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       label: Text(
-                        '分类',
+                        _model.transactionCategoryName,
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                       icon: Icon(
@@ -50,14 +57,14 @@ class _TransactionTopWidgetState extends State<TransactionTopWidget> {
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: <Widget>[
                   Text(
-                    '￥',
+                    _model.transactionTotalBalance<0?'-￥':'￥',
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '1,200.00',
+                    '${Utils.getMoneyFormat(_model.transactionTotalBalance)}',
                     style: TextStyle(
                         fontSize: 24,
                         color: Colors.white,
@@ -100,7 +107,7 @@ class _TransactionTopWidgetState extends State<TransactionTopWidget> {
                                       color: Colors.white),
                                 ),
                                 Text(
-                                  '2,000,048.00',
+                                  '${Utils.getMoneyFormat(_model.transactionIncome)}',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'Exo2',
@@ -147,7 +154,7 @@ class _TransactionTopWidgetState extends State<TransactionTopWidget> {
                                       color: Colors.white),
                                 ),
                                 Text(
-                                  '2,000,048.00',
+                                  '${Utils.getMoneyFormat(_model.transactionSpend)}',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'Exo2',

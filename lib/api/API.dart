@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:quicknote/data/Category.dart';
 import 'package:quicknote/data/CategoryGroup.dart';
+import 'package:quicknote/data/CategoryTransaction.dart';
 import 'package:quicknote/data/TransactionView.dart';
 import 'package:http/http.dart' as http;
 
@@ -54,6 +55,24 @@ class API {
         for (var data in resJson) {
           var c = Category.fromJson(data);
           list.add(c);
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return list;
+  }
+
+  static Future<List<CategoryTransaction>> getCategoryTransactions(int categoryId,int userId) async{
+    List<CategoryTransaction> list = List();
+    try {
+      var url = _BASE_URL + "/transaction/category/$categoryId/$userId";
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        var resJson = json.decode(response.body);
+        for (var data in resJson) {
+          var ct = CategoryTransaction.fromJson(data);
+          list.add(ct);
         }
       }
     } catch (e) {

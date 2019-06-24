@@ -5,6 +5,7 @@ import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/widget/home/HomePage.dart';
 import 'package:quicknote/widget/login/LoginPage.dart';
 import 'package:quicknote/widget/profile/ProfilePage.dart';
+import 'package:quicknote/widget/transaction/detail/TransactionPage.dart';
 import 'package:quicknote/widget/transaction/new/NewTransactionPage.dart';
 
 void main() {
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/newTransaction': (context) => NewTransactionPage(),
         '/profile':(context) => ProfilePage(),
+        '/transaction':(context)=>TransactionPage(),
       },
       home: HomePage(),
     );

@@ -1,24 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:quicknote/api/API.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/widget/transaction/detail/TimelineWidget.dart';
 import 'package:quicknote/widget/transaction/detail/TransactionListWidget.dart';
 import 'package:quicknote/widget/transaction/detail/TransactionTopWidget.dart';
+import 'package:provider/provider.dart';
 
 class TransactionPage extends StatelessWidget {
+  int _categoryId = -1;
+
   @override
   Widget build(BuildContext context) {
+    _categoryId = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      body: TransactionPageWidget(),
+      body: TransactionPageWidget(_categoryId),
     );
   }
 }
 
 class TransactionPageWidget extends StatefulWidget {
-  TransactionPageWidget({Key key}) : super(key: key);
+  int categoryId = -1;
+  TransactionPageWidget(this.categoryId);
 
   _TransactionPageWidgetState createState() => _TransactionPageWidgetState();
 }
 
 class _TransactionPageWidgetState extends State<TransactionPageWidget> {
+  TransactionViewModel _model;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    API.getCategoryTransactions(widget.categoryId, 4).then((value) {
+      _model = Provider.of<TransactionViewModel>(context);
+      _model.setCategoryTransactions(value);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,11 +48,13 @@ class _TransactionPageWidgetState extends State<TransactionPageWidget> {
             bottom: 10,
             child: Opacity(
               opacity: 0.37,
-              child: Image.network(
-                'http://118.24.246.193/pic/quicknote/icon_entertainment.png',
-                width: 200,
-                height: 200,
-              ),
+              child: _model == null
+                  ? null
+                  : Image.network(
+                      _model.transactionCategoryIcon,
+                      width: 200,
+                      height: 200,
+                    ),
             ),
           ),
 

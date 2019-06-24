@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:quicknote/model/TransactionViewModel.dart';
+import 'package:provider/provider.dart';
+import 'package:quicknote/utils/Utils.dart';
 class TimelineWidget extends StatefulWidget {
   TimelineWidget({Key key}) : super(key: key);
 
@@ -7,8 +9,10 @@ class TimelineWidget extends StatefulWidget {
 }
 
 class _TimelineWidgetState extends State<TimelineWidget> {
+  TransactionViewModel _model;
   @override
   Widget build(BuildContext context) {
+    _model = Provider.of<TransactionViewModel>(context);
     return Container(
       margin: EdgeInsets.only(left: 24, right: 24, top: 16, bottom: 8),
       child: Row(
@@ -16,12 +20,14 @@ class _TimelineWidgetState extends State<TimelineWidget> {
         children: <Widget>[
           Column(
             children: <Widget>[
+              // month
               Text(
-                '1月',
+                '${Utils.getMonth(_model.transactionYearAndMonth)}月',
                 style: TextStyle(fontSize: 20),
               ),
+              // year
               Text(
-                '2019',
+                Utils.getYear(_model.transactionYearAndMonth),
                 style: TextStyle(fontSize: 15, fontFamily: 'Exo2'),
               ),
             ],
@@ -29,7 +35,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
           Column(
             children: <Widget>[
               Text(
-                '￥10K',
+                _model.transactionMonthBalance,
                 style: TextStyle(fontSize: 20),
               ),
               Text(
