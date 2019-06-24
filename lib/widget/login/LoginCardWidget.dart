@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:quicknote/api/API.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
+import 'package:quicknote/model/UserViewModel.dart';
+import 'package:quicknote/utils/SPUtil.dart';
 import 'package:quicknote/utils/Utils.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class LoginCardWidget extends StatefulWidget {
   LoginCardWidget({Key key}) : super(key: key);
@@ -32,7 +38,6 @@ class _LoginCardWidgetState extends State<LoginCardWidget> {
                       padding: EdgeInsets.only(
                           left: 24, right: 24, top: 24, bottom: 8),
                       child: TextFormField(
-                        
                         keyboardType: TextInputType.phone,
                         decoration: const InputDecoration(
                           helperStyle: TextStyle(color: Colors.red),
@@ -64,7 +69,7 @@ class _LoginCardWidgetState extends State<LoginCardWidget> {
                           _password = value;
                         },
                         validator: (String value) {
-                          if (value.length <= 6) return "密码必须大于6位";
+                          if (value.length < 6) return "密码必须大于6位";
                         },
                       ),
                     ),
@@ -92,7 +97,25 @@ class _LoginCardWidgetState extends State<LoginCardWidget> {
   void _onActionPressed() {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-     //todo
+      API.login(_phone, _password).then((value) {
+        if (value.user != null) {
+          SPUtil().save(UserViewModel.KEY_IS_USER_LOGIN, true);
+          SPUtil().save(UserViewModel.KEY_USER_ID, value.user.user_id);
+          Navigator.pop(context);
+          // 刷新首页数据
+          API.getAllTransactions(value.user.user_id).then((value) {
+            Provider.of<TransactionViewModel>(context)
+                .setAllTransactions(value);
+          });
+        }
+        Fluttertoast.showToast(
+            msg: value.md.message,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 1,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      });
     }
   }
 }

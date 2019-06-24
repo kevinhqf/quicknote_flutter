@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:quicknote/api/API.dart';
 import 'package:quicknote/data/TransactionView.dart';
 import 'package:quicknote/model/TransactionViewModel.dart';
+import 'package:quicknote/model/UserViewModel.dart';
+import 'package:quicknote/utils/SPUtil.dart';
 import 'package:quicknote/widget/home/HomeButtonWidget.dart';
 import 'package:quicknote/widget/home/HomeListWidget.dart';
 import 'package:quicknote/widget/home/SummaryCardWidget.dart';
@@ -29,9 +31,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    API.getAllTransactions(4).then((value) {
-      _model=Provider.of<TransactionViewModel>(context);
-      _model.setAllTransactions(value);
+    SPUtil().getInt(UserViewModel.KEY_USER_ID).then((userId) {
+      API.getAllTransactions(userId ?? -1).then((value) {
+        _model = Provider.of<TransactionViewModel>(context);
+        _model.setAllTransactions(value);
+      });
     });
   }
 
@@ -68,7 +72,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         width: 40,
                       ),
                       onTap: () {
-                        Navigator.pushNamed(context, '/login');
+                        SPUtil()
+                            .getBool(UserViewModel.KEY_IS_USER_LOGIN)
+                            .then((isLogin) {
+                          if (isLogin) {
+                            Navigator.pushNamed(context, '/profile');
+                          } else {
+                            Navigator.pushNamed(context, '/login');
+                          }
+                        });
                       },
                     )
                   ],

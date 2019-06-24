@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:quicknote/api/API.dart';
 import 'package:quicknote/model/TransactionViewModel.dart';
+import 'package:quicknote/model/UserViewModel.dart';
+import 'package:quicknote/utils/SPUtil.dart';
 import 'package:quicknote/widget/transaction/detail/TimelineWidget.dart';
 import 'package:quicknote/widget/transaction/detail/TransactionListWidget.dart';
 import 'package:quicknote/widget/transaction/detail/TransactionTopWidget.dart';
@@ -31,9 +33,13 @@ class _TransactionPageWidgetState extends State<TransactionPageWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    API.getCategoryTransactions(widget.categoryId, 4).then((value) {
-      _model = Provider.of<TransactionViewModel>(context);
-      _model.setCategoryTransactions(value);
+    SPUtil().getInt(UserViewModel.KEY_USER_ID).then((userId) {
+      API
+          .getCategoryTransactions(widget.categoryId, userId ?? -1)
+          .then((value) {
+        _model = Provider.of<TransactionViewModel>(context);
+        _model.setCategoryTransactions(value);
+      });
     });
   }
 

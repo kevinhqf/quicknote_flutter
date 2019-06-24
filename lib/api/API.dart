@@ -1,10 +1,12 @@
 import 'dart:convert';
-
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 import 'package:quicknote/data/Category.dart';
 import 'package:quicknote/data/CategoryGroup.dart';
 import 'package:quicknote/data/CategoryTransaction.dart';
 import 'package:quicknote/data/TransactionView.dart';
 import 'package:http/http.dart' as http;
+import 'package:quicknote/data/UserResponse.dart';
 
 class API {
   static const _BASE_URL = 'http://127.0.0.1:8000';
@@ -63,7 +65,8 @@ class API {
     return list;
   }
 
-  static Future<List<CategoryTransaction>> getCategoryTransactions(int categoryId,int userId) async{
+  static Future<List<CategoryTransaction>> getCategoryTransactions(
+      int categoryId, int userId) async {
     List<CategoryTransaction> list = List();
     try {
       var url = _BASE_URL + "/transaction/category/$categoryId/$userId";
@@ -79,5 +82,23 @@ class API {
       print(e);
     }
     return list;
+  }
+
+  static Future<UserResponse> login(String phone, String password) async {
+    UserResponse user;
+    var encryptPwd = md5.convert(utf8.encode(password));
+
+    try {
+      var url = _BASE_URL + "/user/login";
+      final response =
+          await http.post(url, body: {'phone': phone, 'password': encryptPwd.toString()});
+      if (response.statusCode == 200) {
+        var resJson = json.decode(response.body);
+        user = UserResponse.fromJson(resJson);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return user;
   }
 }

@@ -60,7 +60,6 @@ class TransactionViewModel with ChangeNotifier {
     if (needNotify) notifyListeners();
   }
 
-
   void setCategoryGroups(List<CategoryGroup> groups) {
     _categoryGroups = groups;
     _setProfileData(_allTransactions);
@@ -99,6 +98,30 @@ class TransactionViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void clearData() {
+    _newValueStr = "0";
+    _newDescription = "";
+    // home page
+    _allTransactions.clear();
+    _homeTotalBalance = 0.0;
+    _homeTodayBalance = 0.0;
+
+    // profile page
+    _categoryGroups.clear();
+    _profileIncome = 0.0;
+    _profileSpend = 0.0;
+
+    // transaction page
+    _categoryTransactions.clear();
+    _transactionCategoryName = "";
+    _transactionYearAndMonth = "";
+    _transactionCategoryIcon = "";
+    _transactionTotalBalance = 0.0;
+    _transactionIncome = 0.0;
+    _transactionSpend = 0.0;
+    _transactionMonthBalance = "￥0";
+  }
+
   String get newValueStr => _newValueStr;
   String get newDescription => _newDescription;
 
@@ -118,5 +141,4 @@ class TransactionViewModel with ChangeNotifier {
   double get transactionIncome => _transactionIncome;
   double get transactionSpend => _transactionSpend;
   String get transactionMonthBalance => _transactionMonthBalance;
-  
 }

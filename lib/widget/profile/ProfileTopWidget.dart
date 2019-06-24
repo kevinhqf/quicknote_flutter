@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quicknote/model/TransactionViewModel.dart';
+import 'package:quicknote/model/UserViewModel.dart';
+import 'package:quicknote/utils/SPUtil.dart';
 import 'package:quicknote/utils/Utils.dart';
 
 class ProfileTopWidget extends StatefulWidget {
@@ -69,13 +71,44 @@ class _ProfileTopWidgetState extends State<ProfileTopWidget> {
         Positioned(
           right: 16,
           top: MediaQuery.of(context).padding.top + 8,
-          child: Image.asset(
-            'images/log_out.png',
-            width: 30,
-            height: 30,
+          child: GestureDetector(
+            onTap: _logout,
+            child: Image.asset(
+              'images/log_out.png',
+              width: 30,
+              height: 30,
+            ),
           ),
         )
       ],
+    );
+  }
+
+  _logout() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text('提示'),
+            content: Text('确定要退出登录吗？'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('确定'),
+                onPressed: () {
+                  SPUtil().save(UserViewModel.KEY_USER_ID, -1);
+                  SPUtil().save(UserViewModel.KEY_IS_USER_LOGIN, false);
+                  _model.clearData();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('取消'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          ),
     );
   }
 }
