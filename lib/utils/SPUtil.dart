@@ -21,23 +21,18 @@ class SPUtil {
     }
   }
 
-  Future<int> getInt(String key) async{
-
+  Future<int> getInt(String key) async {
     _sp = await SharedPreferences.getInstance();
-    return _sp.getInt(key);
-  }
-  Future<bool> getBool(String key) async{
-
-    _sp = await SharedPreferences.getInstance();
-    return _sp.getBool(key);
-    
+    return _sp.getInt(key) ?? -1;
   }
 
-  Future<String> getString(String key) async{
+  Future<bool> getBool(String key) async {
     _sp = await SharedPreferences.getInstance();
-    return _sp.getString(key);
+    return _sp.getBool(key) ?? false;
   }
 
-
-
+  Future<String> getString(String key) async {
+    _sp = await SharedPreferences.getInstance();
+    return _sp.getString(key) ?? null;
+  }
 }

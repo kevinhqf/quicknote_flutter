@@ -9,7 +9,9 @@ import 'package:http/http.dart' as http;
 import 'package:quicknote/data/UserResponse.dart';
 
 class API {
-  static const _BASE_URL = 'http://127.0.0.1:8000';
+  static const _LOCAL_SERVER = false;
+  static const _BASE_URL =
+      _LOCAL_SERVER ? 'http://127.0.0.1:8000' : 'http://118.24.246.193:8000';
 
   static Future<String> addTransaction(TransactionView tv) async {
     String res;
@@ -23,6 +25,23 @@ class API {
         "categoryId": tv.categoryId.toString(),
         "userId": tv.userId.toString(),
       });
+      if (response.statusCode == 200) {
+        res = response.body;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return res;
+  }
+
+  static Future<String> addAllTransactions(
+      List<TransactionView> tansactions) async {
+    String res;
+    try {
+      var url = _BASE_URL + "/transaction/addAll";
+      final response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(tansactions));
       if (response.statusCode == 200) {
         res = response.body;
       }

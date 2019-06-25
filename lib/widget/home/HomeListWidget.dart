@@ -4,7 +4,7 @@ import 'package:quicknote/data/ColorPattle.dart';
 import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/utils/Utils.dart';
 import 'package:quicknote/data/TransactionView.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 class HomeListWidget extends StatefulWidget {
   HomeListWidget();
 
@@ -45,6 +45,7 @@ class _HomeListWidgetState extends State<HomeListWidget> {
         Navigator.pushNamed(context, '/transaction',arguments: t.categoryId);
       },
       child: Container(
+        color: Color(0xfffafafa),
           margin: EdgeInsets.only(left: 16, right: 16, top: 12),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -106,11 +107,17 @@ class _HomeListWidgetState extends State<HomeListWidget> {
                         ),
                       ),
                       // icon
-                      Image.network(
+                      Image(
+                        height: 45,
+                        width: 45,
+                        filterQuality: FilterQuality.medium,
+                        image: CachedNetworkImageProvider(t.categoryIcon),
+                      )
+                      /* Image.network(
                         t.categoryIcon,
                         height: 45,
                         width: 45,
-                      )
+                      ) */
                     ],
                   ),
                 ],

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:quicknote/api/API.dart';
+import 'package:quicknote/data/TransactionView.dart';
 import 'package:quicknote/data/User.dart';
 import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/model/UserViewModel.dart';
+import 'package:quicknote/utils/DBUtil.dart';
 import 'package:quicknote/utils/SPUtil.dart';
 import 'package:quicknote/utils/ToastUtil.dart';
 import 'package:quicknote/utils/Utils.dart';
 import 'package:provider/provider.dart';
+import 'package:mobsms/mobsms.dart';
 
 class LoginCardWidget extends StatefulWidget {
   LoginCardWidget({Key key}) : super(key: key);
@@ -89,7 +93,14 @@ class _LoginCardWidgetState extends State<LoginCardWidget> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28)),
                   onPressed: _onActionPressed,
-                  child: Image.asset('images/icon_arrow_right.png'),
+                  child: Text(
+                    _model.isLoginActive ? 'Go!' : "注册",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                  //Image.asset('images/icon_arrow_right.png')
                 ),
               )
             ],
@@ -120,13 +131,62 @@ class _LoginCardWidgetState extends State<LoginCardWidget> {
     }
   }
 
+  void _showSyncAlertDialog(int userId) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+                title: Text('同步提示'),
+                content: Text('需要将本地数据同步到你的账户吗？'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('现在同步'),
+                    onPressed: () {
+                      DBUtil().getAllTransaction().then((value) {
+                        var list = value
+                            .map((it) => TransactionView(
+                                null,
+                                it.description,
+                                it.value,
+                                it.type,
+                                it.time,
+                                it.categoryId,
+                                null,
+                                null,
+                                userId))
+                            .toList();
+                        API.addAllTransactions(list).then((_) {
+                          Navigator.of(context).pop();
+                          DBUtil().clear();
+                          // 刷新首页数据
+                          API.getAllTransactions(userId).then((value) {
+                            Provider.of<TransactionViewModel>(context)
+                                .setAllTransactions(value);
+                            Navigator.pop(context);
+                            ToastUtil.show('数据同步成功');
+                          });
+                        });
+                      });
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('以后再说'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      // 刷新首页数据
+                      API.getAllTransactions(userId).then((value) {
+                        Provider.of<TransactionViewModel>(context)
+                            .setAllTransactions(value);
+                        Navigator.pop(context);
+                      });
+                      
+                    },
+                  )
+                ]));
+  }
+
   void _saveUserAndPullHomePageData(User user) {
     SPUtil().save(UserViewModel.KEY_IS_USER_LOGIN, true);
     SPUtil().save(UserViewModel.KEY_USER_ID, user.user_id);
-    Navigator.pop(context);
-    // 刷新首页数据
-    API.getAllTransactions(user.user_id).then((value) {
-      Provider.of<TransactionViewModel>(context).setAllTransactions(value);
-    });
+    _showSyncAlertDialog(user.user_id);
   }
 }

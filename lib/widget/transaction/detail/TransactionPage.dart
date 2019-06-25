@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quicknote/api/API.dart';
 import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/model/UserViewModel.dart';
+import 'package:quicknote/utils/DBUtil.dart';
 import 'package:quicknote/utils/SPUtil.dart';
 import 'package:quicknote/widget/transaction/detail/TimelineWidget.dart';
 import 'package:quicknote/widget/transaction/detail/TransactionListWidget.dart';
@@ -34,12 +35,19 @@ class _TransactionPageWidgetState extends State<TransactionPageWidget> {
     // TODO: implement initState
     super.initState();
     SPUtil().getInt(UserViewModel.KEY_USER_ID).then((userId) {
-      API
-          .getCategoryTransactions(widget.categoryId, userId ?? -1)
-          .then((value) {
-        _model = Provider.of<TransactionViewModel>(context);
-        _model.setCategoryTransactions(value);
-      });
+      if (userId == null || userId == -1) {
+        DBUtil().getCategoryTransactions(widget.categoryId).then((value) {
+          _model = Provider.of<TransactionViewModel>(context);
+          _model.setCategoryTransactions(value);
+        });
+      } else {
+        API
+            .getCategoryTransactions(widget.categoryId, userId ?? -1)
+            .then((value) {
+          _model = Provider.of<TransactionViewModel>(context);
+          _model.setCategoryTransactions(value);
+        });
+      }
     });
   }
 

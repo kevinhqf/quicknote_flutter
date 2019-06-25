@@ -8,6 +8,7 @@ import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/model/UserViewModel.dart';
 import 'package:quicknote/utils/SPUtil.dart';
 import 'package:quicknote/utils/ToastUtil.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class NewCategoryCardWidget extends StatefulWidget {
   NewCategoryCardWidget({Key key}) : super(key: key);
@@ -19,7 +20,8 @@ class _NewCategoryCardWidgetState extends State<NewCategoryCardWidget> {
   CategoryViewModel _model;
   TransactionViewModel _transactionViewModel;
   var _isSelection = List.filled(12, false);
-  String _tmpDescription="";
+  String _tmpDescription = "";
+  String _tmpIcon = "";
   @override
   Widget build(BuildContext context) {
     _model = Provider.of<CategoryViewModel>(context);
@@ -109,12 +111,14 @@ class _NewCategoryCardWidgetState extends State<NewCategoryCardWidget> {
           onPressed: () {
             _transactionViewModel.setNewCategoryId(c.category_id);
             _tmpDescription = c.name;
+            _tmpIcon = c.icon;
             setState(() {
               _setSelection(index);
             });
           },
-          child: Image.network(
-            c.icon,
+          child: Image(
+            filterQuality: FilterQuality.medium,
+            image: CachedNetworkImageProvider(c.icon),
             width: 35,
             height: 35,
             color: _isSelection[index] ? null : Color(0xffced0d2),
@@ -145,7 +149,7 @@ class _NewCategoryCardWidgetState extends State<NewCategoryCardWidget> {
       ToastUtil.show("请选择相关分类");
       return;
     }
-    _transactionViewModel.addTransaction(_tmpDescription);
+    _transactionViewModel.addTransaction(_tmpDescription,_tmpIcon);
     Navigator.pop(context);
   }
 }

@@ -17,6 +17,9 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  sqflite: ^1.1.0
+  cached_network_image: ^0.8.0
+  mobsms:
   fluttertoast: ^3.0.3
   crypto: ^2.0.6
   shared_preferences: ^0.5.3+1

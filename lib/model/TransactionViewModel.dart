@@ -4,6 +4,7 @@ import 'package:quicknote/data/CategoryGroup.dart';
 import 'package:quicknote/data/CategoryTransaction.dart';
 import 'package:quicknote/data/TransactionView.dart';
 import 'package:quicknote/model/UserViewModel.dart';
+import 'package:quicknote/utils/DBUtil.dart';
 import 'package:quicknote/utils/SPUtil.dart';
 import 'package:quicknote/utils/Utils.dart';
 
@@ -46,7 +47,7 @@ class TransactionViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void addTransaction(String tmpDescription) {
+  void addTransaction(String tmpDescription, String tmpIcon) {
     SPUtil().getBool(UserViewModel.KEY_IS_USER_LOGIN).then((isLogin) {
       if (isLogin) {
         SPUtil().getInt(UserViewModel.KEY_USER_ID).then((userId) {
@@ -65,10 +66,29 @@ class TransactionViewModel with ChangeNotifier {
           // 服务器添加数据
           API.addTransaction(tv).then((value) {
             _clearAllNewData();
+            //刷新首页
             API.getAllTransactions(userId ?? -1).then((value) {
               setAllTransactions(value);
             });
           });
+        });
+      } else {
+        //数据库
+        TransactionView tv = TransactionView(
+            null,
+            _newDescription.isEmpty ? tmpDescription : _newDescription,
+            _newType == NEW_TYPE_SPEND
+                ? (double.parse(_newValueStr) * -1)
+                : (double.parse(_newValueStr)),
+            _newType,
+            Utils.getNowDate(),
+            _newCategoryId,
+            tmpDescription,
+            tmpIcon,
+            -1);
+        // 插入数据并刷新首页
+        DBUtil().insertAndQuery(tv).then((value) {
+          setAllTransactions(value);
         });
       }
     });

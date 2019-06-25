@@ -3,6 +3,7 @@ import 'package:quicknote/data/CategoryGroup.dart';
 import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/utils/Utils.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CategoryListWidget extends StatefulWidget {
   CategoryListWidget({Key key}) : super(key: key);
@@ -39,48 +40,54 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
     return Container(
       margin: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 4),
       height: 110,
-      child: Card(
-        elevation: 2.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Stack(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(right: 16),
-              alignment: AlignmentDirectional.centerEnd,
-              child: Opacity(
-                opacity: 0.37,
-                child: Image.network(
-                  cg.categoryIcon,
-                  width: 96,
-                  height: 96,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, '/transaction',arguments: cg.categoryId);
+        },
+        child: Card(
+          elevation: 2.0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: Stack(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(right: 16),
+                alignment: AlignmentDirectional.centerEnd,
+                child: Opacity(
+                  opacity: 0.37,
+                  child: Image(
+                    image: CachedNetworkImageProvider(cg.categoryIcon),
+                    width: 96,
+                    height: 96,
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              left: 16,
-              top: 16,
-              child: Text(
-                cg.categoryName,
-                style: TextStyle(
-                    color: Color(0xff4a4a4a),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+              Positioned(
+                left: 16,
+                top: 16,
+                child: Text(
+                  cg.categoryName,
+                  style: TextStyle(
+                      color: Color(0xff4a4a4a),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-            Positioned(
-              bottom: 16,
-              left: 16,
-              child: Text(
-                (cg.value < 0 ? "-" : "") +
-                    "￥${Utils.getMoneyFormat(cg.value)}",
-                style: TextStyle(
-                    fontFamily: 'Exo2',
-                    color: Color(0xff4a4a4a),
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold),
+              Positioned(
+                bottom: 16,
+                left: 16,
+                child: Text(
+                  (cg.value < 0 ? "-" : "") +
+                      "￥${Utils.getMoneyFormat(cg.value)}",
+                  style: TextStyle(
+                      fontFamily: 'Exo2',
+                      color: Color(0xff4a4a4a),
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

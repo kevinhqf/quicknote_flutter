@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quicknote/api/API.dart';
 import 'package:quicknote/data/ColorPattle.dart';
 import 'package:quicknote/model/CategoryViewModel.dart';
+import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/widget/transaction/new/NewCategoryCardWidget.dart';
 import 'package:quicknote/widget/transaction/new/NewTransactionTopWidget.dart';
 import 'package:quicknote/widget/transaction/new/NumpadWidget.dart';
@@ -105,6 +106,7 @@ class _NewTransactionPageWidgetState extends State<NewTransactionPageWidget> {
   }
 
   void _toggleCardVisibility() {
+    Provider.of<TransactionViewModel>(context).setNewCategoryId(-1);
     setState(() {
       _isCardVisible = !_isCardVisible;
     });

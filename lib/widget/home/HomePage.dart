@@ -4,6 +4,7 @@ import 'package:quicknote/api/API.dart';
 import 'package:quicknote/data/TransactionView.dart';
 import 'package:quicknote/model/TransactionViewModel.dart';
 import 'package:quicknote/model/UserViewModel.dart';
+import 'package:quicknote/utils/DBUtil.dart';
 import 'package:quicknote/utils/SPUtil.dart';
 import 'package:quicknote/widget/home/HomeButtonWidget.dart';
 import 'package:quicknote/widget/home/HomeListWidget.dart';
@@ -32,10 +33,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     // TODO: implement initState
     super.initState();
     SPUtil().getInt(UserViewModel.KEY_USER_ID).then((userId) {
-      API.getAllTransactions(userId ?? -1).then((value) {
-        _model = Provider.of<TransactionViewModel>(context);
-        _model.setAllTransactions(value);
-      });
+      if (userId == null || userId == -1) {
+        DBUtil().getAllTransaction().then((value) {
+          _model = Provider.of<TransactionViewModel>(context);
+          _model.setAllTransactions(value);
+        });
+      } else {
+        API.getAllTransactions(userId ?? -1).then((value) {
+          _model = Provider.of<TransactionViewModel>(context);
+          _model.setAllTransactions(value);
+        });
+      }
     });
   }
 
@@ -79,7 +87,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             Navigator.pushNamed(context, '/profile');
                           } else {
                             Navigator.pushNamed(context, '/login');
-                            Provider.of<UserViewModel>(context).setLoginActive(true);
+                            Provider.of<UserViewModel>(context)
+                                .setLoginActive(true);
                           }
                         });
                       },
