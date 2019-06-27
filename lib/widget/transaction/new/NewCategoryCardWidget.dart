@@ -39,7 +39,11 @@ class _NewCategoryCardWidgetState extends State<NewCategoryCardWidget> {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(left: 16, right: 8),
-                    child: Image.asset('images/black_arrow_left.png'),
+                    child: Image.asset(
+                      
+                      'images/black_arrow_left.png',
+                      filterQuality: FilterQuality.medium,
+                      ),
                   ),
                   Expanded(
                     child: ListView.builder(
@@ -54,7 +58,9 @@ class _NewCategoryCardWidgetState extends State<NewCategoryCardWidget> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(right: 16, left: 8),
-                    child: Image.asset('images/black_arrow_right.png'),
+                    child: Image.asset('images/black_arrow_right.png',
+                    filterQuality: FilterQuality.medium,
+                    ),
                   ),
                 ],
               ),
