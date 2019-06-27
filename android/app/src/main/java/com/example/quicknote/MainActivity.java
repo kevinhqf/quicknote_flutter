@@ -1,6 +1,9 @@
 package com.example.quicknote;
 
 import android.os.Bundle;
+
+import com.mob.MobSDK;
+
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import cn.smssdk.flutter.MobsmsPlugin;

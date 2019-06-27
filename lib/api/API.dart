@@ -159,4 +159,34 @@ class API {
     }
     return user;
   }
+
+  static Future<UserResponse> getUser(String phone) async {
+    UserResponse user;
+    try {
+      var url = _BASE_URL + '/user/phone/$phone';
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        var resJson = json.decode(response.body);
+        user = UserResponse.fromJson(resJson);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return user;
+  }
+
+  static Future<UserResponse> loginWithSmsCode(String phone)async{
+    UserResponse user;
+    try {
+      var url = _BASE_URL + '/user/login/sms';
+      final response = await http.post(url,body: {'phone': phone});
+      if (response.statusCode == 200) {
+        var resJson = json.decode(response.body);
+        user = UserResponse.fromJson(resJson);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return user;
+  }
 }

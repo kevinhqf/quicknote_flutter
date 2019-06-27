@@ -60,6 +60,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                     GestureDetector(
                       onTap: () {
                          _model.setLoginActive(false);
+                         _model.setSMSCodeMode(true);
                       },
                       child: Text(
                         '注册',
