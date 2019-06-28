@@ -42,7 +42,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      initialRoute: '/home',
       routes: {
         '/home': (context) => HomePage(),
         '/login': (context) => LoginPage(),

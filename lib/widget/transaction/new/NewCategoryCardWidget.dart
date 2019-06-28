@@ -155,7 +155,7 @@ class _NewCategoryCardWidgetState extends State<NewCategoryCardWidget> {
       ToastUtil.show("请选择相关分类");
       return;
     }
-    _transactionViewModel.addTransaction(_tmpDescription,_tmpIcon);
+    _transactionViewModel.addTransaction(_tmpDescription,_tmpIcon); 
     Navigator.pop(context);
   }
 }

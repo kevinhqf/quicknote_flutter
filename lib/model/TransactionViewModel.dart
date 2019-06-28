@@ -87,7 +87,9 @@ class TransactionViewModel with ChangeNotifier {
             tmpIcon,
             -1);
         // 插入数据并刷新首页
+
         DBUtil().insertAndQuery(tv).then((value) {
+          _clearAllNewData();
           setAllTransactions(value);
         });
       }
