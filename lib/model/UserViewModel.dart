@@ -24,6 +24,12 @@ class UserViewModel with ChangeNotifier {
     if (needNotify) notifyListeners();
   }
 
+  void clearAllData() {
+    _isSMSCodeMode = true;
+    _canGetSmsCode = true;
+    _loginActive = true;
+  }
+
   bool get isLoginActive => _loginActive;
   bool get smsCodeMode => _isSMSCodeMode;
   bool get canGetSmsCode => _canGetSmsCode;

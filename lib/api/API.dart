@@ -175,11 +175,11 @@ class API {
     return user;
   }
 
-  static Future<UserResponse> loginWithSmsCode(String phone)async{
+  static Future<UserResponse> loginWithSmsCode(String phone) async {
     UserResponse user;
     try {
       var url = _BASE_URL + '/user/login/sms';
-      final response = await http.post(url,body: {'phone': phone});
+      final response = await http.post(url, body: {'phone': phone});
       if (response.statusCode == 200) {
         var resJson = json.decode(response.body);
         user = UserResponse.fromJson(resJson);
@@ -188,5 +188,21 @@ class API {
       print(e);
     }
     return user;
+  }
+
+  static Future<int> updatePassword(String password, int userId) async {
+    int res = -1;
+    var encryptPwd = md5.convert(utf8.encode(password));
+    try {
+      var url = _BASE_URL + '/user/password';
+      final response = 
+          await http.post(url, body: {'password': encryptPwd.toString(), 'id': userId.toString()});
+      if (response.statusCode == 200) {
+        res = int.parse(response.body);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return res;
   }
 }

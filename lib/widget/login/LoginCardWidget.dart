@@ -34,7 +34,7 @@ class _LoginCardWidgetState extends State<LoginCardWidget> {
     // TODO: implement dispose
     super.dispose();
     _timer?.cancel();
-    _model.setCanGetSmsCode(true, needNotify: false);
+    _model.clearAllData();
   }
 
   @override

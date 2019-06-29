@@ -75,9 +75,23 @@ class _ProfileTopWidgetState extends State<ProfileTopWidget> {
             onTap: _logout,
             child: Image.asset(
               'images/log_out.png',
+              width: 25,
+              height: 25,
+            ),
+          ),
+        ),
+        Positioned(
+          top: MediaQuery.of(context).padding.top +4,
+          right: 60,
+          child: GestureDetector(
+            onTap: (){
+              Navigator.pushNamed(context, '/password');
+            },
+            child:Image.asset(
+              'images/password.png',
               width: 30,
               height: 30,
-            ),
+            ) ,
           ),
         )
       ],
