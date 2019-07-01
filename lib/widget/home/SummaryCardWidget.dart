@@ -43,7 +43,7 @@ class _SummaryCardWidgetState extends State<SummaryCardWidget> {
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: <Widget>[
                   Text(
-                    '￥',
+                    _model.homeTotalBalance>0?'￥':'-￥',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   Text(
